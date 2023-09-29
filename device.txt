@@ -1,0 +1,1 @@
+https://fastvpn.vn/api/v1/client/subscribe?token=2bbc17bb8ef67650d3fc9d827fc5a0c4
