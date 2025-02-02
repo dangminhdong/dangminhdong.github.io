@@ -1,6 +1,6 @@
 ---
 title: "Peter John Landin"
-subtitle: "「计算机科学偶像」- 彼得·约翰·兰丁"
+subtitle: ""Biểu tượng khoa học máy tính" - Peter John Landing"
 layout: post
 author: "Hux"
 published: false
