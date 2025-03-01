@@ -1,5 +1,7 @@
 # DangMinhDong Blog
 ## Link
-[https://dangminhdong.name.vn](DangMinhDongBlog)
+[DangMinhDong Blog](https://dangminhdong.name.vn)
 
-[https://dangminhdong.github.io](Profile)
+[Profiles](https://dangminhdong.github.io)
+
+[Upload](https://dangminhdong.github.io/up/)
