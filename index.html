@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Upload Ảnh Lên Imgur</title>
+  <title>Upload Ảnh Lên Imgur V2</title>
   <style>
     body {
       font-family: sans-serif;
@@ -35,53 +35,62 @@
   <div id="preview"></div>
 
   <script>
-    function imgur(f, ob) {
-      var files = document.querySelector(f);
-      files.onchange = function () {
-        var file = this.files[0];
-        if (file && file.type.match(/image.*/)) {
-          var fd = new FormData();
-          fd.append("image", file);
-          var xhr = new XMLHttpRequest();
-          xhr.open("POST", "https://imgur.minhdongg18.workers.dev");
-          xhr.upload.onprogress = function (e) {
-            if (e.lengthComputable) {
-              var percent = Math.floor((e.loaded / e.total) * 100) + '%';
-              ob.loading(percent);
-            }
-          };
-          xhr.onload = function () {
-            try {
-              var res = JSON.parse(xhr.responseText);
-              if (res.success === true && res.status === 200) {
-                var data = res.data;
-                ob.loaded(data.link, data.type, data.size, data.datetime);
-              } else {
-                window.alert('Lỗi: tải lên thất bại');
-              }
-            } catch (err) {
-              window.alert('Lỗi xử lý phản hồi từ server');
-            }
-          };
-          xhr.send(fd);
-        } else {
-          window.alert('Chỉ cho phép chọn ảnh');
+    function uploadToImgur(file, ob) {
+      if (!file || !file.type.match(/image.*/)) {
+        alert("Chỉ cho phép chọn ảnh!");
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append("image", file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://imgur.minhdongg18.workers.dev");
+
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+          const percent = Math.floor((e.loaded / e.total) * 100) + '%';
+          ob.loading(percent);
         }
       };
+
+      xhr.onload = function () {
+        try {
+          const res = JSON.parse(xhr.responseText);
+          if (res.success === true && res.status === 200) {
+            const data = res.data;
+            ob.loaded(data.link, data.type, data.size, data.datetime);
+          } else {
+            alert("Lỗi: tải lên thất bại");
+          }
+        } catch (err) {
+          alert("Lỗi xử lý phản hồi từ server");
+        }
+      };
+
+      xhr.onerror = function () {
+        alert("Không thể kết nối đến máy chủ.");
+      };
+
+      xhr.send(fd);
     }
 
-    imgur("#imgFile", {
-      loading: function (percent) {
-        document.getElementById("progress").innerText = "Đang tải: " + percent;
-      },
-      loaded: function (link, type, size, datetime) {
-        document.getElementById("progress").innerText = "Tải lên thành công!";
-        document.getElementById("preview").innerHTML = `
-          <p><strong>Link ảnh:</strong> <a href="${link}" target="_blank">${link}</a></p>
-          <img src="${link}" alt="Uploaded Image">
-          <p>Kiểu: ${type} | Kích thước: ${(size / 1024).toFixed(2)} KB</p>
-        `;
-      }
+    // Sự kiện khi người dùng chọn ảnh
+    document.getElementById("imgFile").addEventListener("change", function () {
+      const file = this.files[0];
+      uploadToImgur(file, {
+        loading: function (percent) {
+          document.getElementById("progress").innerText = "Đang tải: " + percent;
+        },
+        loaded: function (link, type, size, datetime) {
+          document.getElementById("progress").innerText = "Tải lên thành công!";
+          document.getElementById("preview").innerHTML = `
+            <p><strong>Link ảnh:</strong> <a href="${link}" target="_blank">${link}</a></p>
+            <img src="${link}" alt="Uploaded Image">
+            <p>Kiểu: ${type} | Kích thước: ${(size / 1024).toFixed(2)} KB</p>
+          `;
+        }
+      });
     });
   </script>
 
