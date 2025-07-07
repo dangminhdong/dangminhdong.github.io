@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>🌸 Upload Ảnh Imgur</title>
+  <title>💠 Upload Ảnh Imgur</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP&display=swap" rel="stylesheet">
   <style>
     :root {
-      --pink: #f9c5d1;
-      --purple: #c6b5f2;
-      --blue: #a3d5ff;
-      --white: #fff;
+      --miku-blue: #9bdaf1;
+      --miku-green: #a3f7bf;
+      --miku-pink: #fbc2eb;
+      --white: #ffffff;
       --shadow: rgba(0, 0, 0, 0.08);
     }
 
@@ -21,23 +21,22 @@
 
     body {
       margin: 0;
-      padding: 0;
       font-family: 'Noto Sans JP', sans-serif;
-      background: linear-gradient(to bottom right, var(--pink), var(--blue));
+      background: linear-gradient(to bottom right, var(--miku-blue), var(--miku-green));
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      padding: 30px;
     }
 
     .container {
       background: var(--white);
-      padding: 30px;
       border-radius: 20px;
       box-shadow: 0 8px 30px var(--shadow);
-      text-align: center;
+      padding: 30px;
+      max-width: 700px;
       width: 100%;
-      max-width: 640px;
       animation: fadeIn 0.6s ease-in-out;
     }
 
@@ -46,50 +45,111 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    h1 {
+    h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-link {
+      text-decoration: none;
+      color: #00acc1;
       font-family: 'Pacifico', cursive;
-      font-size: 2.4em;
-      color: #e91e63;
-      margin-bottom: 10px;
+      font-size: 1.5em;
+    }
+
+    .logo-link:hover {
+      opacity: 0.8;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background: var(--miku-pink);
+      border: none;
+      border-radius: 20px;
+      margin: 0 5px;
+      font-weight: bold;
+      color: #444;
+      box-shadow: 0 2px 6px var(--shadow);
+    }
+
+    .tab.active {
+      background: var(--miku-blue);
+      color: #000;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
     }
 
     input[type="file"] {
       display: none;
     }
 
-    .file-label {
+    .file-label,
+    .url-button {
       display: inline-block;
       padding: 14px 26px;
-      background: linear-gradient(45deg, var(--purple), var(--pink));
+      background: linear-gradient(45deg, var(--miku-blue), var(--miku-pink));
       color: white;
       border-radius: 30px;
       cursor: pointer;
       font-weight: bold;
       margin-top: 15px;
       box-shadow: 0 4px 10px var(--shadow);
+      text-align: center;
     }
 
-    .file-label:hover {
+    .file-label:hover,
+    .url-button:hover {
       transform: scale(1.05);
+    }
+
+    .url-input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px dashed #ccc;
+      outline: none;
+    }
+
+    .upload-box,
+    .url-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 2px dashed var(--miku-blue);
+      border-radius: 16px;
+      padding: 20px;
+      background: #f8fefe;
+      margin: 10px auto;
+      max-width: 500px;
+      min-height: 180px;
+      text-align: center;
+    }
+
+    .url-box {
+      background: #fef8fd;
     }
 
     .upload-item {
       margin-top: 25px;
       padding: 20px;
       border-radius: 16px;
-      background: #fafafa;
+      background: #fdfdfd;
       box-shadow: 0 4px 12px var(--shadow);
-    }
-
-    .upload-item img.thumb {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      transition: transform 0.3s ease;
-    }
-
-    .upload-item img.thumb:hover {
-      transform: scale(1.03);
     }
 
     .progressContainer {
@@ -97,20 +157,25 @@
       background: #eee;
       border-radius: 6px;
       overflow: hidden;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .progressBar {
       height: 100%;
-      background: var(--blue);
+      background: var(--miku-green);
       width: 0%;
     }
 
-    .result a {
-      color: #0288d1;
-      text-decoration: none;
-      display: block;
-      margin-bottom: 6px;
+    .size-text {
+      font-size: 0.85em;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .upload-item img.thumb {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 10px;
     }
 
     .markdown {
@@ -118,124 +183,198 @@
       border-radius: 6px;
       padding: 8px;
       font-family: monospace;
-      font-size: 0.95em;
-      word-break: break-all;
-      margin-bottom: 10px;
+      font-size: 0.9em;
+      word-break: break-word;
+      margin: 10px 0;
     }
 
-.copy-buttons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
+    .copy-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
     .copy-btn {
-      background: linear-gradient(45deg, var(--purple), var(--blue));
+      background: linear-gradient(45deg, var(--miku-blue), var(--miku-green));
       border: none;
       border-radius: 30px;
       padding: 8px 16px;
       color: white;
       font-size: 0.85em;
       cursor: pointer;
-      box-shadow: 0 2px 6px var(--shadow);
-    }
-
-    .copy-btn:hover {
-      opacity: 0.9;
     }
 
     .success { color: green; font-weight: bold; }
     .error { color: red; font-weight: bold; }
+
+    footer {
+      text-align: center;
+      font-size: 0.85em;
+      color: #666;
+      margin-top: 30px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>🌸 Upload Ảnh Lưu Trữ Imgur</h1>
-    <label class="file-label" for="fileInput">Chọn ảnh</label>
-    <input type="file" id="fileInput" accept="image/*" multiple>
-    <div id="uploads"></div>
+<div class="container">
+  <h3><a href="/" class="logo-link">💠 Upload Ảnh Imgur</a></h3>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('fileTab')">📂 Từ Máy</button>
+    <button class="tab" onclick="switchTab('urlTab')">🌐 Từ URL</button>
   </div>
 
-  <script>
-    const workerUrl = "https://upload.minhdongg18.workers.dev";
-    const input = document.getElementById('fileInput');
-    const uploads = document.getElementById('uploads');
+  <div id="fileTab" class="tab-content active">
+    <div class="upload-box">
+      <label class="file-label" for="fileInput">📂 Chọn ảnh từ máy</label>
+      <input type="file" id="fileInput" accept="image/*" multiple>
+    </div>
+  </div>
 
-    input.addEventListener('change', function () {
-      const files = Array.from(this.files);
-      uploads.innerHTML = "";
+  <div id="urlTab" class="tab-content">
+    <div class="url-box">
+      <input type="text" id="urlInput" placeholder="🌐 Dán liên kết ảnh..." class="url-input" />
+      <div class="url-button" onclick="uploadFromUrl()">🚀 Upload từ URL</div>
+    </div>
+  </div>
 
-      files.forEach(file => {
-        const reader = new FileReader();
-        const uploadItem = document.createElement('div');
-        uploadItem.className = 'upload-item';
-        uploadItem.innerHTML = `
-          <div class="progressContainer"><div class="progressBar"></div></div>
-          <div class="result"><strong>Đang tải lên...</strong></div>
-        `;
-        uploads.appendChild(uploadItem);
+  <div id="uploads"></div>
 
-        const progressBar = uploadItem.querySelector('.progressBar');
-        const result = uploadItem.querySelector('.result');
+  <footer>
+    2025 © Đông Use 🐭 & ⌨️ 
+  </footer>
+</div>
 
-        reader.onloadend = function () {
-          const base64Image = reader.result.split(',')[1];
-          const payload = JSON.stringify({ image: base64Image });
+<script>
+const workerUrl = atob("aHR0cHM6Ly91cGxvYWQubWluaGRvbmdnMTgud29ya2Vycy5kZXY=");
+  const uploads = document.getElementById('uploads');
 
-          const xhr = new XMLHttpRequest();
-          xhr.open("POST", workerUrl, true);
-          xhr.setRequestHeader("Content-Type", "application/json");
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.target.classList.add('active');
+  }
 
-          xhr.upload.onprogress = function (e) {
-            if (e.lengthComputable) {
-              const percent = Math.round((e.loaded / e.total) * 100);
-              progressBar.style.width = percent + "%";
-            }
-          };
+  function formatBytes(bytes) {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    if (bytes === 0) return '0 Byte';
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+  }
 
-          xhr.onload = function () {
-            try {
-              const data = JSON.parse(xhr.responseText);
-              if (data.success) {
-                const link = data.data.link;
-                const markdown = `![${file.name}](${link})`;
-                result.innerHTML = `
-                  <img src="${link}" alt="thumb" class="thumb">
-                  <div class="markdown">${link}</a></div>
-                  <div class="markdown">${markdown}</div>
-                  <div class="copy-buttons">
-                 <button class="copy-btn" onclick="copyText('${link}')">📋 Copy Link</button>
-                    <button class="copy-btn" onclick="copyText('${markdown.replace(/"/g, '\\"')}')">📋 Copy Markdown</button>
-                  </div></center>
-                `;
-              } else {
-                result.innerHTML = `<div class="error">❌ Lỗi: ${data.data?.error || "Không rõ"}</div>`;
-              }
-            } catch (e) {
-              result.innerHTML = `<div class="error">❌ Lỗi phản hồi server.</div>`;
-            }
-          };
+  function createUploadItem(name, size) {
+    const div = document.createElement('div');
+    div.className = 'upload-item';
+    div.innerHTML = `
+      <div class="size-text">Đang tải: 0 / ${formatBytes(size)}</div>
+      <div class="progressContainer"><div class="progressBar"></div></div>
+      <div class="result"><strong>Đang tải lên...</strong></div>
+    `;
+    uploads.prepend(div);
+    return div;
+  }
 
-          xhr.onerror = function () {
-            result.innerHTML = `<div class="error">❌ Không thể kết nối server.</div>`;
-          };
-
-          xhr.send(payload);
-        };
-
-        reader.readAsDataURL(file);
-      });
+  document.getElementById('fileInput').addEventListener('change', function () {
+    Array.from(this.files).forEach(file => {
+      const item = createUploadItem(file.name, file.size);
+      const reader = new FileReader();
+      reader.onloadend = () => uploadToImgur(reader.result.split(',')[1], file.name, file.size, item);
+      reader.readAsDataURL(file);
     });
+  });
 
-    function copyText(text) {
-      navigator.clipboard.writeText(text)
-        .then(() => alert("📋 Đã copy!"))
-        .catch(() => alert("⚠️ Không thể copy"));
+  function uploadFromUrl() {
+    const urlInput = document.getElementById('urlInput');
+    const url = urlInput.value.trim();
+
+    if (!/^https?:\/\//i.test(url)) {
+      alert("⚠️ URL phải bắt đầu bằng http:// hoặc https://");
+      return;
     }
-  </script>
+
+    if (!/\.(jpg|jpeg|png|gif|bmp|webp|svg)(\?.*)?$/i.test(url)) {
+      alert("⚠️ Chỉ hỗ trợ liên kết hình ảnh (.jpg, .png, .gif...)");
+      return;
+    }
+
+    fetch(url)
+      .then(res => res.blob())
+      .then(blob => {
+        const item = createUploadItem("Từ URL", blob.size);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          uploadToImgur(reader.result.split(',')[1], "image", blob.size, item);
+          urlInput.value = "";
+        };
+        reader.readAsDataURL(blob);
+      })
+      .catch(() => {
+        const item = createUploadItem("Từ URL", 0);
+        item.querySelector('.result').innerHTML = `<div class="error">❌ Lỗi khi tải ảnh từ URL.</div>`;
+        urlInput.value = "";
+      });
+  }
+
+  function uploadToImgur(base64Image, name, size, item) {
+    const progressBar = item.querySelector('.progressBar');
+    const sizeText = item.querySelector('.size-text');
+    const result = item.querySelector('.result');
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", workerUrl, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    const base64Length = base64Image.length;
+    const totalBytes = Math.floor(base64Length * 3 / 4);
+
+    xhr.upload.onprogress = function (e) {
+      const percent = e.lengthComputable ? Math.min(100, Math.round((e.loaded / e.total) * 100)) : 0;
+      progressBar.style.width = percent + "%";
+      const uploadedBytes = Math.round((percent / 100) * totalBytes);
+      sizeText.textContent = `Đang tải: ${formatBytes(uploadedBytes)} / ${formatBytes(totalBytes)}`;
+    };
+
+    xhr.onload = function () {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (data.success) {
+          const link = data.data.link;
+          const markdown = `![${name}](${link})`;
+          result.innerHTML = `
+            <img src="${link}" alt="thumb" class="thumb">
+            <div class="markdown">${link}</div>
+            <div class="markdown">${markdown}</div>
+            <div class="copy-buttons">
+              <button class="copy-btn" onclick="copyText('${link}')">📋 Copy Link</button>
+              <button class="copy-btn" onclick="copyText('${markdown.replace(/"/g, '\\"')}')">📋 Copy Markdown</button>
+            </div>
+          `;
+          sizeText.style.display = 'none';
+          progressBar.style.display = 'none';
+        } else {
+          result.innerHTML = `<div class="error">❌ Lỗi: ${data.data?.error || "Không rõ"}</div>`;
+        }
+      } catch {
+        result.innerHTML = `<div class="error">❌ Lỗi phản hồi server.</div>`;
+      }
+    };
+
+    xhr.onerror = function () {
+      result.innerHTML = `<div class="error">❌ Không thể kết nối server.</div>`;
+    };
+
+    xhr.send(JSON.stringify({ image: base64Image }));
+  }
+
+  function copyText(text) {
+    navigator.clipboard.writeText(text)
+      .then(() => alert("📋 Đã copy!"))
+      .catch(() => alert("⚠️ Không thể copy"));
+  }
+</script>
 
 </body>
 </html>
