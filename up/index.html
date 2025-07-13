@@ -1,380 +1,171 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!DOCTYPE html><html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>💠 Upload Ảnh Imgur</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+JP&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --miku-blue: #9bdaf1;
-      --miku-green: #a3f7bf;
-      --miku-pink: #fbc2eb;
-      --white: #ffffff;
-      --shadow: rgba(0, 0, 0, 0.08);
-    }
-
-    * {
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Noto Sans JP', sans-serif;
-      background: linear-gradient(to bottom right, var(--miku-blue), var(--miku-green));
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px;
-    }
-
-    .container {
-      background: var(--white);
-      border-radius: 20px;
-      box-shadow: 0 8px 30px var(--shadow);
-      padding: 30px;
-      max-width: 700px;
-      width: 100%;
-      animation: fadeIn 0.6s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h3 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .logo-link {
-      text-decoration: none;
-      color: #00acc1;
-      font-family: 'Pacifico', cursive;
-      font-size: 1.5em;
-    }
-
-    .logo-link:hover {
-      opacity: 0.8;
-    }
-
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      background: var(--miku-pink);
-      border: none;
-      border-radius: 20px;
-      margin: 0 5px;
-      font-weight: bold;
-      color: #444;
-      box-shadow: 0 2px 6px var(--shadow);
-    }
-
-    .tab.active {
-      background: var(--miku-blue);
-      color: #000;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    .file-label,
-    .url-button {
-      display: inline-block;
-      padding: 14px 26px;
-      background: linear-gradient(45deg, var(--miku-blue), var(--miku-pink));
-      color: white;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 15px;
-      box-shadow: 0 4px 10px var(--shadow);
-      text-align: center;
-    }
-
-    .file-label:hover,
-    .url-button:hover {
-      transform: scale(1.05);
-    }
-
-    .url-input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 12px;
-      border: 1px dashed #ccc;
-      outline: none;
-    }
-
-    .upload-box,
-    .url-box {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      border: 2px dashed var(--miku-blue);
-      border-radius: 16px;
-      padding: 20px;
-      background: #f8fefe;
-      margin: 10px auto;
-      max-width: 500px;
-      min-height: 180px;
-      text-align: center;
-    }
-
-    .url-box {
-      background: #fef8fd;
-    }
-
-    .upload-item {
-      margin-top: 25px;
-      padding: 20px;
-      border-radius: 16px;
-      background: #fdfdfd;
-      box-shadow: 0 4px 12px var(--shadow);
-    }
-
-    .progressContainer {
-      height: 10px;
-      background: #eee;
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 6px;
-    }
-
-    .progressBar {
-      height: 100%;
-      background: var(--miku-green);
-      width: 0%;
-    }
-
-    .size-text {
-      font-size: 0.85em;
-      color: #555;
-      margin-bottom: 8px;
-    }
-
-    .upload-item img.thumb {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-top: 10px;
-    }
-
-    .markdown {
-      background: #f1f1f1;
-      border-radius: 6px;
-      padding: 8px;
-      font-family: monospace;
-      font-size: 0.9em;
-      word-break: break-word;
-      margin: 10px 0;
-    }
-
-    .copy-buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .copy-btn {
-      background: linear-gradient(45deg, var(--miku-blue), var(--miku-green));
-      border: none;
-      border-radius: 30px;
-      padding: 8px 16px;
-      color: white;
-      font-size: 0.85em;
-      cursor: pointer;
-    }
-
-    .success { color: green; font-weight: bold; }
-    .error { color: red; font-weight: bold; }
-
-    footer {
-      text-align: center;
-      font-size: 0.85em;
-      color: #666;
-      margin-top: 30px;
-    }
+    :root { --miku-blue: #9bdaf1; --miku-green: #a3f7bf; --shadow: rgba(0, 0, 0, 0.1); }
+    * { box-sizing: border-box; transition: all 0.3s ease; }
+    body { margin: 0; font-family: 'Noto Sans JP', sans-serif; background: linear-gradient(to bottom right, var(--miku-blue), var(--miku-green)); display: flex; align-items: center; justify-content: center; padding: 30px; min-height: 100vh; }
+    .container { background: white; border-radius: 1px; box-shadow: 0 4px 12px var(--shadow); padding: 20px; max-width: 600px; width: 100%; }
+    h3 { text-align: center; margin-bottom: 20px; }
+    .logo-link { text-decoration: none; color: #00acc1; font-family: 'Pacifico', cursive; font-size: 1.5em; }
+    .tabs { display: flex; justify-content: center; margin-bottom: 20px; }
+    .tab { padding: 10px 20px; cursor: pointer; border: 2px solid var(--miku-blue); border-radius: 1px; margin: 0 5px; font-weight: bold; color: var(--miku-blue); }
+    .tab.active { background: var(--miku-blue); color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    input[type="file"] { display: none; }
+    .file-label, .url-button { display: inline-block; padding: 12px 24px; background: var(--miku-blue); color: white; border-radius: 1px; cursor: pointer; margin-top: 15px; text-align: center; }
+    .url-input { width: 100%; padding: 10px; margin-top: 10px; border-radius: 1px; border: 1px solid #ccc; outline: none; }
+    .upload-box, .url-box { display: grid; place-items: center; border: 1px dashed var(--miku-blue); border-radius: 1px; padding: 20px; background: #f9fafb; margin: 10px auto; max-width: 500px; min-height: 180px; text-align: center; }
+    .upload-item { margin-top: 20px; padding: 16px; border-radius: 1px; background: #fff; box-shadow: 0 2px 8px var(--shadow); }
+    .progressContainer { height: 8px; background: #eee; border-radius: 1px; overflow: hidden; margin-bottom: 6px; position: relative; }
+    .progressBar { height: 100%; background: var(--miku-green); width: 0%; }
+    .size-info { text-align: center; font-size: 12px; color: #333; font-weight: bold; margin-top: 6px; }
+    .markdown { background: #f1f1f1; border-radius: 1px; padding: 6px; font-family: monospace; font-size: 0.9em; word-break: break-word; margin: 10px 0; }
+    .copy-buttons { display: flex; gap: 10px; justify-content: center; }
+    .copy-btn { background: var(--miku-blue); border: none; border-radius: 1px; padding: 8px 16px; color: white; font-size: 0.85em; cursor: pointer; }
+    footer { text-align: center; font-size: 0.85em; color: #666; margin-top: 20px; }
+    #copyAllBtn, #resetBtn { display: none; position: fixed; bottom: 20px; background: var(--miku-blue); color: white; border: none; padding: 12px 20px; border-radius: 1px; cursor: pointer; box-shadow: 0 4px 8px var(--shadow); z-index: 9999; }
+    #copyAllBtn { right: 20px; }
+    #resetBtn { left: 20px; }
+    .toast-top { position: fixed; top: 20px; right: 20px; background: var(--miku-green); color: #333; padding: 12px 20px; border-radius: 1px; box-shadow: 0 4px 8px var(--shadow); z-index: 9999; opacity: 0.95; animation: slideDown 0.4s ease; }
+    @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 0.95; } }
   </style>
 </head>
 <body>
-
-<div class="container">
-  <h3><a href="https://mix.id.vn" class="logo-link">💠 Upload Ảnh Imgur</a></h3>
-
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('fileTab')">📂 Từ Máy</button>
-    <button class="tab" onclick="switchTab('urlTab')">🌐 Từ URL</button>
-  </div>
-
-  <div id="fileTab" class="tab-content active">
-    <div class="upload-box">
-      <label class="file-label" for="fileInput">📂 Chọn ảnh từ máy</label>
-      <input type="file" id="fileInput" accept="image/*" multiple>
+  <div class="container">
+    <h3><a href="https://mix.id.vn" class="logo-link">💠 Upload Ảnh Imgur</a></h3>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('fileTab', event)">📂 Từ Máy</button>
+      <button class="tab" onclick="switchTab('urlTab', event)">🌐 Từ URL</button>
     </div>
-  </div>
-
-  <div id="urlTab" class="tab-content">
-    <div class="url-box">
-      <input type="text" id="urlInput" placeholder="🌐 Dán liên kết ảnh..." class="url-input" />
-      <div class="url-button" onclick="uploadFromUrl()">🚀 Upload từ URL</div>
+    <div id="fileTab" class="tab-content active">
+      <div class="upload-box">
+        <label class="file-label" for="fileInput">📂 Chọn ảnh từ máy</label>
+        <input type="file" id="fileInput" accept="image/*" multiple>
+      </div>
     </div>
+    <div id="urlTab" class="tab-content">
+      <div class="url-box">
+        <input type="text" id="urlInput" placeholder="🌐 Dán liên kết ảnh..." class="url-input">
+        <div class="url-button" onclick="uploadFromUrl()">🚀 Upload từ URL</div>
+      </div>
+    </div>
+    <div id="uploads"></div>
+    <footer>2025 © Đông Use 🐭 & ⌨️</footer>
   </div>
-
-  <div id="uploads"></div>
-
-  <footer>
-    2025 © Đông Use 🐭 & ⌨️ 
-  </footer>
-</div>
-
-<script>
-const workerUrl = atob("aHR0cHM6Ly91cGxvYWQubWluaGRvbmdnMTgud29ya2Vycy5kZXY=");
-  const uploads = document.getElementById('uploads');
-
-  function switchTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    event.target.classList.add('active');
-  }
-
-  function formatBytes(bytes) {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    if (bytes === 0) return '0 Byte';
-    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
-  }
-
-  function createUploadItem(name, size) {
-    const div = document.createElement('div');
-    div.className = 'upload-item';
-    div.innerHTML = `
-      <div class="size-text">Đang tải: 0 / ${formatBytes(size)}</div>
-      <div class="progressContainer"><div class="progressBar"></div></div>
-      <div class="result"><strong>Đang tải lên...</strong></div>
-    `;
-    uploads.prepend(div);
-    return div;
-  }
-
-  document.getElementById('fileInput').addEventListener('change', function () {
-    Array.from(this.files).forEach(file => {
-      const item = createUploadItem(file.name, file.size);
-      const reader = new FileReader();
-      reader.onloadend = () => uploadToImgur(reader.result.split(',')[1], file.name, file.size, item);
-      reader.readAsDataURL(file);
-    });
-  });
-
-  function uploadFromUrl() {
-    const urlInput = document.getElementById('urlInput');
-    const url = urlInput.value.trim();
-
-    if (!/^https?:\/\//i.test(url)) {
-      alert("⚠️ URL phải bắt đầu bằng http:// hoặc https://");
-      return;
+  <button id="copyAllBtn" onclick="copyAllMarkdown()">📋 Copy Tất Cả Markdown</button>
+  <button id="resetBtn" onclick="resetUploads()">♻️ Reset Ảnh</button>
+  <script>
+    const workerUrl = atob("aHR0cHM6Ly91cGxvYWQubWluaGRvbmdnMTgud29ya2Vycy5kZXY=");
+    const uploads = document.getElementById('uploads');
+    function switchTab(tabId, event) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
     }
-
-    if (!/\.(jpg|jpeg|png|gif|bmp|webp|svg)(\?.*)?$/i.test(url)) {
-      alert("⚠️ Chỉ hỗ trợ liên kết hình ảnh (.jpg, .png, .gif...)");
-      return;
+    function createUploadItem(name) {
+      const div = document.createElement('div');
+      div.className = 'upload-item';
+      div.innerHTML = `<div class="progressContainer"><div class="progressBar"></div></div><div class="size-info">Đang tải lên...</div><div class="result"></div>`;
+      uploads.prepend(div);
+      updateActionButtons();
+      return div;
     }
-
-    fetch(url)
-      .then(res => res.blob())
-      .then(blob => {
-        const item = createUploadItem("Từ URL", blob.size);
+    document.getElementById('fileInput').addEventListener('change', function() {
+      Array.from(this.files).forEach(file => {
+        const item = createUploadItem(file.name);
         const reader = new FileReader();
-        reader.onloadend = () => {
-          uploadToImgur(reader.result.split(',')[1], "image", blob.size, item);
-          urlInput.value = "";
-        };
-        reader.readAsDataURL(blob);
-      })
-      .catch(() => {
-        const item = createUploadItem("Từ URL", 0);
-        item.querySelector('.result').innerHTML = `<div class="error">❌ Lỗi khi tải ảnh từ URL.</div>`;
-        urlInput.value = "";
+        reader.onloadend = () => uploadToImgur(reader.result.split(',')[1], file.name, file.size, item);
+        reader.readAsDataURL(file);
       });
-  }
-
-  function uploadToImgur(base64Image, name, size, item) {
-    const progressBar = item.querySelector('.progressBar');
-    const sizeText = item.querySelector('.size-text');
-    const result = item.querySelector('.result');
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", workerUrl, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    const base64Length = base64Image.length;
-    const totalBytes = Math.floor(base64Length * 3 / 4);
-
-    xhr.upload.onprogress = function (e) {
-      const percent = e.lengthComputable ? Math.min(100, Math.round((e.loaded / e.total) * 100)) : 0;
-      progressBar.style.width = percent + "%";
-      const uploadedBytes = Math.round((percent / 100) * totalBytes);
-      sizeText.textContent = `Đang tải: ${formatBytes(uploadedBytes)} / ${formatBytes(totalBytes)}`;
-    };
-
-    xhr.onload = function () {
-      try {
-        const data = JSON.parse(xhr.responseText);
-        if (data.success) {
-          const link = data.data.link;
-          const markdown = `![${name}](${link})`;
-          result.innerHTML = `
-            <img src="${link}" alt="thumb" class="thumb">
-            <div class="markdown">${link}</div>
-            <div class="markdown">${markdown}</div>
-            <div class="copy-buttons">
-              <button class="copy-btn" onclick="copyText('${link}')">📋 Copy Link</button>
-              <button class="copy-btn" onclick="copyText('${markdown.replace(/"/g, '\\"')}')">📋 Copy Markdown</button>
-            </div>
-          `;
-          sizeText.style.display = 'none';
-          progressBar.style.display = 'none';
+    });
+    function uploadFromUrl() {
+      const urlInput = document.getElementById('urlInput');
+      const url = urlInput.value.trim();
+      if (!/^https?:\/\//i.test(url)) return alert("⚠️ URL phải bắt đầu bằng http:// hoặc https://");
+      fetch(url).then(res => res.blob()).then(blob => {
+        const item = createUploadItem("Từ URL");
+        const reader = new FileReader();
+        reader.onloadend = () => uploadToImgur(reader.result.split(',')[1], "image", blob.size, item);
+        reader.readAsDataURL(blob);
+      });
+    }
+    function uploadToImgur(base64Image, name, size, item) {
+      const progressBar = item.querySelector('.progressBar');
+      const sizeInfo = item.querySelector('.size-info');
+      const result = item.querySelector('.result');
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", workerUrl, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.upload.onprogress = e => {
+        if (e.lengthComputable) {
+          const percent = Math.min(100, Math.round((e.loaded / e.total) * 100));
+          progressBar.style.width = percent + "%";
+          sizeInfo.textContent = `Đang tải: ${(e.loaded/1048576).toFixed(2)} MB / ${(e.total/1048576).toFixed(2)} MB (${percent}%)`;
         } else {
-          result.innerHTML = `<div class="error">❌ Lỗi: ${data.data?.error || "Không rõ"}</div>`;
+          sizeInfo.textContent = `Đang tải...`;
         }
-      } catch {
-        result.innerHTML = `<div class="error">❌ Lỗi phản hồi server.</div>`;
-      }
-    };
-
-    xhr.onerror = function () {
-      result.innerHTML = `<div class="error">❌ Không thể kết nối server.</div>`;
-    };
-
-    xhr.send(JSON.stringify({ image: base64Image }));
-  }
-
-  function copyText(text) {
-    navigator.clipboard.writeText(text)
-      .then(() => alert("📋 Đã copy!"))
-      .catch(() => alert("⚠️ Không thể copy"));
-  }
-</script>
-
+      };
+      xhr.onload = () => {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (data.success) {
+            const link = data.data.link;
+            const markdown = `![${name}](${link})`;
+            const sizeMb = (size / 1048576).toFixed(2) + " MB";
+            result.innerHTML = `<img src="${link}" alt="thumb" style="max-width:100%; margin-top: 10px;"><div class="size-info">Dung lượng: ${sizeMb}</div><div class="markdown">${link}</div><div class="markdown">${markdown}</div><div class="copy-buttons"><button class="copy-btn" onclick="copyText('${link}')">📋 Copy Link</button><button class="copy-btn" onclick="copyText('${markdown.replace(/\"/g, '\\\"')}')">📋 Copy Markdown</button></div>`;
+            showToastTop("✅ Upload hoàn tất!");
+          } else {
+            result.innerHTML = `<div style='color:red;'>❌ Lỗi: ${data.data?.error || "Không rõ"}</div>`;
+          }
+        } catch {
+          result.innerHTML = `<div style='color:red;'>❌ Lỗi phản hồi server.</div>`;
+        }
+      };
+      xhr.onerror = () => result.innerHTML = `<div style='color:red;'>❌ Không thể kết nối server.</div>`;
+      xhr.send(JSON.stringify({ image: base64Image }));
+    }
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => showToast("📋 Đã copy!"));
+    }
+    function copyAllMarkdown() {
+      const allMarkdownDivs = document.querySelectorAll('.markdown');
+      let combinedMarkdown = "";
+      allMarkdownDivs.forEach(div => {
+        if (div.textContent.startsWith("![")) combinedMarkdown += div.textContent + "\n";
+      });
+      if (combinedMarkdown.trim()) navigator.clipboard.writeText(combinedMarkdown.trim()).then(() => showToast("📋 Đã copy tất cả Markdown!"));
+      else showToast("⚠️ Không có Markdown để copy!");
+    }
+    function resetUploads() {
+      uploads.innerHTML = "";
+      updateActionButtons();
+      showToast("♻️ Đã reset ảnh đã upload!");
+    }
+    function updateActionButtons() {
+      const hasUploads = uploads.children.length > 0;
+      document.getElementById('copyAllBtn').style.display = hasUploads ? 'block' : 'none';
+      document.getElementById('resetBtn').style.display = hasUploads ? 'block' : 'none';
+    }
+    function showToast(message) {
+      const toast = document.createElement("div");
+      toast.textContent = message;
+      toast.style.cssText = `position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:white;padding:10px 20px;border-radius:1px;opacity:0.9;z-index:9999;`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    }
+    function showToastTop(message) {
+      const toast = document.createElement("div");
+      toast.textContent = message;
+      toast.className = "toast-top";
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+  </script>
 </body>
 </html>
