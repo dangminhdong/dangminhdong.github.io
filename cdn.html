@@ -121,6 +121,10 @@
             letter-spacing: 0.03em;
         }
 
+        .input-wrapper {
+            position: relative;
+        }
+
         input[type="text"],
         input[type="password"] {
             width: 100%;
@@ -272,6 +276,7 @@
             background-color: var(--input-bg);
             border-radius: 4px;
             overflow: hidden;
+            position: relative;
         }
 
         .progress-bar-fill {
@@ -308,10 +313,19 @@
             gap: 6px;
         }
 
+        .copy-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
         .copy-group {
             display: flex;
             gap: 8px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.85rem;
         }
 
         .copy-input {
@@ -371,6 +385,7 @@
             font-family: var(--font-code);
         }
 
+        /* SVG Icons */
         .icon {
             width: 18px;
             height: 18px;
@@ -397,7 +412,9 @@
     <!-- Credentials Section -->
     <div class="form-group">
         <label for="token">GitHub Access Token</label>
-        <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+        <div class="input-wrapper">
+            <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+        </div>
     </div>
 
     <div class="grid-2">
@@ -447,10 +464,21 @@
             <svg class="icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             Upload hoàn tất & Đã khởi tạo CDN Link!
         </div>
+
+        <!-- Direct Link Copy -->
+        <div class="copy-label">Direct Link</div>
         <div class="copy-group">
             <input type="text" class="copy-input" id="cdnUrlInput" readonly>
-            <button class="btn-copy" onclick="copyCdnUrl()" id="copyBtn">Copy Link</button>
+            <button class="btn-copy" onclick="copyText('cdnUrlInput', this)" id="copyBtn">Copy Link</button>
         </div>
+
+        <!-- Markdown Copy -->
+        <div class="copy-label">Markdown Format</div>
+        <div class="copy-group">
+            <input type="text" class="copy-input" id="markdownInput" readonly>
+            <button class="btn-copy" onclick="copyText('markdownInput', this)">Copy Markdown</button>
+        </div>
+
         <div class="preview-img-container">
             <img src="" alt="Uploaded Preview" class="preview-img" id="previewImg">
         </div>
@@ -458,6 +486,7 @@
 </div>
 
 <script>
+    // Restore Saved Configuration
     document.addEventListener("DOMContentLoaded", () => {
         if(localStorage.getItem("gh_token")) document.getElementById("token").value = localStorage.getItem("gh_token");
         if(localStorage.getItem("gh_username")) document.getElementById("username").value = localStorage.getItem("gh_username");
@@ -468,7 +497,7 @@
     const dropZone = document.getElementById('dropZone');
     const fileInfoBadge = document.getElementById('fileInfoBadge');
 
-    // Drag & Drop Handling
+    // Drag & Drop events
     ['dragenter', 'dragover'].forEach(eventName => {
         dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
     });
@@ -507,6 +536,7 @@
         const progressStats = document.getElementById('progressStats');
         const resultBox = document.getElementById('resultBox');
 
+        // Reset display
         errorMsg.style.display = 'none';
         resultBox.style.display = 'none';
 
@@ -515,6 +545,7 @@
             return;
         }
 
+        // Save local configuration
         localStorage.setItem("gh_token", token);
         localStorage.setItem("gh_username", username);
         localStorage.setItem("gh_repo", repo);
@@ -523,18 +554,19 @@
         const totalSize = file.size;
         const fileName = `images/${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
 
+        // Disable button & show progress
         uploadBtn.disabled = true;
         progressBox.style.display = 'block';
         progressBarFill.style.width = '0%';
-        progressStatus.textContent = 'Đang đọc tập tin...';
+        progressStatus.textContent = 'Đang đọc và mã hóa tập tin...';
         progressStats.textContent = `0 KB / ${formatBytes(totalSize)} (0%)`;
 
         const reader = new FileReader();
 
-        // Stage 1: File Reading Progress
+        // Track local file reading progress (Stage 1)
         reader.onprogress = (e) => {
             if (e.lengthComputable) {
-                const percent = Math.round((e.loaded / e.total) * 25);
+                const percent = Math.round((e.loaded / e.total) * 30);
                 progressBarFill.style.width = percent + '%';
                 progressStats.textContent = `${formatBytes(e.loaded)} / ${formatBytes(totalSize)} (${percent}%)`;
             }
@@ -544,21 +576,22 @@
             const base64Content = reader.result.split(',')[1];
             
             progressStatus.textContent = 'Đang tải dữ liệu lên GitHub via REST API...';
-            progressBarFill.style.width = '30%';
+            progressBarFill.style.width = '35%';
 
+            // Prepare JSON Payload
             const payload = JSON.stringify({
                 message: `Upload image: ${fileName}`,
                 content: base64Content
             });
 
-            // Stage 2: AJAX Uploading using XMLHttpRequest
+            // Use XMLHttpRequest (XHR) for tracking real AJAX upload progress to GitHub API (Stage 2)
             const xhr = new XMLHttpRequest();
             const targetUrl = `https://api.github.com/repos/${username}/${repo}/contents/${fileName}`;
 
             xhr.upload.onprogress = (e) => {
                 if (e.lengthComputable) {
-                    const uploadPercent = Math.round((e.loaded / e.total) * 70);
-                    const totalPercent = 30 + uploadPercent;
+                    const uploadPercent = Math.round((e.loaded / e.total) * 60);
+                    const totalPercent = 35 + uploadPercent;
                     progressBarFill.style.width = totalPercent + '%';
                     progressStats.textContent = `${formatBytes(e.loaded)} / ${formatBytes(e.total)} (${totalPercent}%)`;
                 }
@@ -572,19 +605,21 @@
                     progressStats.textContent = `${formatBytes(totalSize)} / ${formatBytes(totalSize)} (100%)`;
 
                     const cdnUrl = `https://cdn.jsdelivr.net/gh/${username}/${repo}@main/${fileName}`;
+                    const markdownCode = `![${file.name}](${cdnUrl})`;
                     
                     setTimeout(() => {
                         progressBox.style.display = 'none';
                         document.getElementById('cdnUrlInput').value = cdnUrl;
+                        document.getElementById('markdownInput').value = markdownCode;
                         document.getElementById('previewImg').src = cdnUrl;
                         resultBox.style.display = 'block';
-                    }, 400);
+                    }, 500);
 
                 } else {
                     progressBox.style.display = 'none';
                     try {
                         const err = JSON.parse(xhr.responseText);
-                        showError(`GitHub Error [${xhr.status}]: ${err.message || 'Tải lên thất bại'}`);
+                        showError(`GitHub Error [${xhr.status}]: ${err.message || 'Không thể upload'}`);
                     } catch(e) {
                         showError(`Lỗi hệ thống [${xhr.status}]: Tải lên thất bại`);
                     }
@@ -594,7 +629,7 @@
             xhr.onerror = function() {
                 uploadBtn.disabled = false;
                 progressBox.style.display = 'none';
-                showError('Lỗi kết nối mạng.');
+                showError('Lỗi kết nối mạng hoặc CORS không hợp lệ.');
             };
 
             xhr.open('PUT', targetUrl, true);
@@ -606,7 +641,7 @@
         reader.onerror = function() {
             uploadBtn.disabled = false;
             progressBox.style.display = 'none';
-            showError('Lỗi khi đọc file từ đĩa.');
+            showError('Lỗi khi đọc file từ đĩa cục bộ.');
         };
 
         reader.readAsDataURL(file);
@@ -618,19 +653,19 @@
         errorMsg.style.display = 'block';
     }
 
-    function copyCdnUrl() {
-        const cdnInput = document.getElementById('cdnUrlInput');
-        const copyBtn = document.getElementById('copyBtn');
+    function copyText(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const originalText = btn.textContent;
         
-        cdnInput.select();
-        navigator.clipboard.writeText(cdnInput.value);
+        input.select();
+        navigator.clipboard.writeText(input.value);
 
-        copyBtn.textContent = 'Đã Copy!';
-        copyBtn.style.backgroundColor = '#10b981';
+        btn.textContent = 'Đã Copy!';
+        btn.style.backgroundColor = '#10b981';
         
         setTimeout(() => {
-            copyBtn.textContent = 'Copy Link';
-            copyBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+            btn.textContent = originalText;
+            btn.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
         }, 2000);
     }
 </script>
